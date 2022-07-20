@@ -1,6 +1,17 @@
 const puppeteer = require('puppeteer');
 const xlsx = require("xlsx");
 
+// (async () => {
+//   const browser = await puppeteer.launch();
+//   const page = await browser.newPage();
+//   await page.goto('https://www.snapdeal.com/');
+//   await page.type(".searchformInput.keyword","9780062641540");
+//   await page.waitForSelector(".searchformButton")
+//   await page.click(".searchformButton");
+//   await page.waitForSelector(".favDp .product-tuple-image a");
+//   await page.click(".favDp .product-tuple-image a");
+// })();
+
 async function getPageData(url,page){
 
   await page.goto(url);
@@ -10,17 +21,18 @@ async function getPageData(url,page){
   const isbn = await page.$eval(".h-content", isbn => isbn.textContent);
   const author = await page.$eval("#productOverview > div.col-xs-14.right-card-zoom.reset-padding > div > div.pdp-elec-topcenter-inner.layout > div.highlightsTileContent.highlightsTileContentTop.clearfix > div > ul > li:nth-child(4)", author => author.innerText);
   const publisher = await page.$eval("#productOverview > div.col-xs-14.right-card-zoom.reset-padding > div > div.pdp-elec-topcenter-inner.layout > div.highlightsTileContent.highlightsTileContentTop.clearfix > div > ul > li:nth-child(5) > span.h-content", publisher => publisher.textContent);
+  //const links = await page.$$eval("dp-widget-link hashAdded a", allAs => allAs.map(a => a.href));
 
   return{
     Title: h1,
     Price: price,
     ISBN: isbn,
     Author: author,
-    Publisher: publisher
+    Publisher: publisher,
+    //URL: links
   }
 
-//h-content
-  // const links = await page.$$eval('.favDp .product-tuple-image a', allAs => allAs.map(a => a.href));
+
   // const aoaLinks = links.map(l => [l]);
 
 
@@ -29,8 +41,14 @@ async function getPageData(url,page){
 };
 
 async function main(){
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+const browser = await puppeteer.launch();
+const page = await browser.newPage();
+await page.goto('https://www.snapdeal.com/');
+await page.type(".searchformInput.keyword","9780062641540");
+await page.waitForSelector(".searchformButton")
+await page.click(".searchformButton");
+await page.waitForSelector(".favDp .product-tuple-image a");
+await page.click(".favDp .product-tuple-image a");
   const scrapedData = [];
   const data = await getPageData("https://www.snapdeal.com/product/the-subtle-art-of-not/686281189461#bcrumbSearch:9780062641540",page);
   scrapedData.push(data);

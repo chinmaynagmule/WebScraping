@@ -31,6 +31,12 @@ async function getPageData(url,page){
 async function main(){
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+  await page.goto('https://www.snapdeal.com/');
+  await page.type(".searchformInput.keyword","9780062641540");
+  await page.waitForSelector(".searchformButton")
+  await page.click(".searchformButton");
+  await page.waitForSelector(".favDp .product-tuple-image a");
+  await page.click(".favDp .product-tuple-image a");
   const scrapedData = [];
   const data = await getPageData("https://www.snapdeal.com/product/rich-dad-poor-dad-paperback/623405955519#bcrumbSearch:9781612680019",page);
   scrapedData.push(data);

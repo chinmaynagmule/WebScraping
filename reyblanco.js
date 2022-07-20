@@ -31,6 +31,12 @@ async function getPageData(url,page){
 async function main(){
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+  await page.goto('https://www.snapdeal.com/');
+  await page.type(".searchformInput.keyword","9780062641540");
+  await page.waitForSelector(".searchformButton")
+  await page.click(".searchformButton");
+  await page.waitForSelector(".favDp .product-tuple-image a");
+  await page.click(".favDp .product-tuple-image a");
   const scrapedData = [];
   const data = await getPageData("https://www.snapdeal.com/product/the-subtle-art-of-not/686281189461#bcrumbSearch:9780062641540",page);
   scrapedData.push(data);
